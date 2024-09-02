@@ -1,0 +1,23 @@
+# Directories
+bin/
+obj/
+
+# Environment files
+.env
+
+#Upload directory
+Uploads/
+
+Properties/
+
+# User-specific files
+*.user
+
+# Development configuration files (if they contain sensitive information)
+appsettings.Development.json
+appsettings.json
+
+# Visual Studio files
+.vs/
+*.suo
+*.userprefs
