@@ -92,11 +92,24 @@ namespace ProcessServices.Services.Processor.Impl
         private string GetFirstAndLastName(string reporterInfo)
         {
             string[] parts = reporterInfo.Split(',');
-            // Extract and trim the full name part
+            // Extract the first and last name
             string firstName = parts[0].Trim();
             string lastName = parts[1];
             return firstName + lastName;
             //fa6f2e32-efaf-40ee-9043-3bbc18977b29
         }
+    
+        public Dictionary<string, int> GetVpcTypeCount(IEnumerable<ExcelData> data)
+        {
+            return data.GroupBy(data => data.VPCType)
+                .ToDictionary(
+                Type => Type.Key, 
+                Type => Type.Count() 
+                );
+        }
+
+
+
+
     }
 }

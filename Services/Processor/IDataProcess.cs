@@ -7,5 +7,6 @@ namespace ProcessServices.Services.Processor
         public string FindFilePathById(string id);
         public IEnumerable<ExcelData> GetDataFromFilePath(string filePath);
         public Dictionary<string, Dictionary<string, int>> CountVPCsByReporter(IEnumerable<ExcelData> dataList);
+        public Dictionary<string, int> GetVpcTypeCount(IEnumerable<ExcelData> data);
     }
 }

@@ -30,9 +30,16 @@ namespace ProcessServices.Controllers
             {
                 return NotFound();
             }
-            IEnumerable<ExcelData> data = _IdataProcess.GetDataFromFilePath(filePath);
+            IEnumerable<ExcelData> Alldata = _IdataProcess.GetDataFromFilePath(filePath);
+            var BarChartData = _IdataProcess.CountVPCsByReporter(Alldata);
+            var PieChartData = _IdataProcess.GetVpcTypeCount(Alldata);
+            var CombinedData = new
+            {
+                BarChartData,
+                PieChartData
+            };
             // envoie des données groupé avec un status 200
-            return Ok(_IdataProcess.CountVPCsByReporter(data));
+            return Ok(CombinedData);
 
         }
         
