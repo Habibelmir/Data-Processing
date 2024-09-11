@@ -1,5 +1,7 @@
 using ProcessServices.Services.Processor;
 using ProcessServices.Services.Processor.Impl;
+using ProcessServices.Services.Processor.OverDue;
+using ProcessServices.Services.Processor.OverDue.Impl;
 using ProcessServices.Services.Uploader;
 using ProcessServices.Services.Uploader.Impl;
 
@@ -13,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IFileUpload,ExcelFileUpload>();
 builder.Services.AddScoped<IDataProcess, ExcelDataProcess>();
+builder.Services.AddScoped<IOverDueDataProcess, OverDueExcelDataProcess>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
