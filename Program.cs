@@ -8,6 +8,8 @@ using ProcessServices.Services.Processor.OverDue;
 using ProcessServices.Services.Processor.OverDue.Impl;
 using ProcessServices.Services.Uploader;
 using ProcessServices.Services.Uploader.Impl;
+using ProcessServices.Services.Processor.Finding;
+using ProcessServices.Services.Processor.Finding.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,7 @@ builder.Services.AddScoped<IDataProcess, VPCsExcelDataProcess>();
 builder.Services.AddScoped<IDangerDataProcess, DangerExcelDataProcess>();
 builder.Services.AddScoped<IBogDataProcess  , BogExcelDataProcess>();
 builder.Services.AddScoped<IOverDueDataProcess, OverDueExcelDataProcess>();
+builder.Services.AddScoped<IFindingDataProcess, FindingExcelDataProcess>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
