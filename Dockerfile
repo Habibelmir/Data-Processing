@@ -25,9 +25,8 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-RUN mkdir -p /app/certificates
+
 RUN mkdir -p /app/Uploads
 
-COPY certificates/aspnetapp.pfx /app/certificates/
 ENTRYPOINT ["dotnet", "ProcessServices.dll"]
 
