@@ -13,6 +13,7 @@ namespace ProcessServices.Services.Processor.Finding.Impl
             _env = env;
 
         }
+        
         public string FindFilePathById(string fileid)
         {
             // Define the directory where the files are stored
@@ -75,6 +76,7 @@ namespace ProcessServices.Services.Processor.Finding.Impl
                 }
             }
         }
+        
         private string GetFirstAndLastName(string reporterInfo)
         {
             string[] parts = reporterInfo.Split(',');
@@ -82,8 +84,8 @@ namespace ProcessServices.Services.Processor.Finding.Impl
             string firstName = parts[0].Trim();
             string lastName = parts[1];
             return firstName + lastName;
-            //fa6f2e32-efaf-40ee-9043-3bbc18977b29
         }
+        
         private int GetColumnIndex(IXLRow headerRow, string columnName)
         {
             // verify if the column name exist in excel file column's
