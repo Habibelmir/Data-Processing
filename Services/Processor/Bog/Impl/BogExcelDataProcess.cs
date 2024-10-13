@@ -72,13 +72,15 @@ namespace ProcessServices.Services.Processor.Bog.Impl
         }
         public Dictionary<string, double> GetTotalTimeByUserCount(IEnumerable<BogExcelData> data)
         {
-            return data.Where(row => row.TourValidStatus == status.Valid)
+            return data
+                .Where(row => row.TourValidStatus == status.Valid)
                 .GroupBy(row => row.User)
+                .OrderByDescending(usersum => usersum.Sum(user => user.TotalTime.TotalMinutes)) // Order by total time descending
                 .ToDictionary(
                     user => user.Key,
-                    usersum => usersum.Sum(user => user.TotalTime.TotalMinutes)
+                    usersum => usersum.Sum(user => user.TotalTime.TotalMinutes) // Sum total time
                 );
         }
-    
+
     }
 }
