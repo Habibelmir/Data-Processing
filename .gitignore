@@ -21,3 +21,6 @@ appsettings.json
 .vs/
 *.suo
 *.userprefs
+
+#Certificats de 
+certificates/

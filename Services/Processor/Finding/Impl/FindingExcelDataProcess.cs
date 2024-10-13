@@ -70,7 +70,7 @@ namespace ProcessServices.Services.Processor.Finding.Impl
                         FindingOwner = string.IsNullOrWhiteSpace(FindingOwner) ? null : GetFirstAndLastName(FindingOwner),
                         FindingNumber = row.Cell(columnIndexes["FindingNumber"]).GetValue<string>(),
                         FindingSummary = row.Cell(columnIndexes["FindingSummary"]).GetValue<string>(),
-                        FindingType = ExtractTextBetweenBrackets(row.Cell(columnIndexes["FindingType"]).GetValue<string>())
+                        FindingType = ExtractTextExcludingBrackets(row.Cell(columnIndexes["FindingType"]).GetValue<string>())
                     };
                 }
             }
@@ -91,16 +91,16 @@ namespace ProcessServices.Services.Processor.Finding.Impl
             return column?.Address.ColumnNumber ?? -1; // Return -1 if column not found
         }
 
-        public string ExtractTextBetweenBrackets(string findingType)
+        public string ExtractTextExcludingBrackets(string findingType)
         {
-            int startIndex = findingType.IndexOf('(') + 1;
-            int endIndex = findingType.IndexOf(')');
+            int startIndex = findingType.IndexOf('(');
 
-            if (startIndex > 0 && endIndex > startIndex)
-            {
-                return findingType.Substring(startIndex, endIndex - startIndex);
-            }
-            return null;
+            // If there are no brackets, return the original string
+            if (startIndex == -1) return findingType;
+
+            // Return the part before the opening bracket, trimming any trailing spaces
+            return findingType.Substring(0, startIndex).Trim();
         }
+
     }
 }
