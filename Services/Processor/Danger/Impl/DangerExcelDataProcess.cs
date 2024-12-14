@@ -1,14 +1,12 @@
-﻿
-
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ProcessServices.DataModels;
 
-namespace ProcessServices.Services.Processor.Impl
+namespace ProcessServices.Services.Processor.Danger.Impl
 {
-    public class ExcelDataProcess : IDataProcess
+    public class DangerExcelDataProcess:IDangerDataProcess
     {
         private IHostEnvironment _env;
-        public ExcelDataProcess(IHostEnvironment env)
+        public DangerExcelDataProcess(IHostEnvironment env)
         {
 
             _env = env;
@@ -31,8 +29,7 @@ namespace ProcessServices.Services.Processor.Impl
             // If no file is found, return null or throw an exception based on your needs
             return null;
         }
-
-        public IEnumerable<ExcelData> GetDataFromFilePath(string filePath)
+        public IEnumerable<DangerExcelData> GetDataFromDangerFilePath(string filePath)
         {
             // Reading from Excel using the library ClosedXML
             using (var workbook = new XLWorkbook(filePath))
@@ -41,62 +38,49 @@ namespace ProcessServices.Services.Processor.Impl
 
                 // Read the header row (first row ) 
                 var headerRow = worksheet.Row(1);
-                // dictionary to set each column and it's index in the excel file
+                // Dictionary to set each column and its index in the Excel file
                 var columnIndexes = new Dictionary<string, int>
                 {
-                    { "ReportedBy", GetColumnIndex(headerRow, "VPC rapporté par") },
-                    { "CPVFocus", GetColumnIndex(headerRow, "Ce CPV porte sur") },
-                    { "VPCType", GetColumnIndex(headerRow, "Type de VPC effectué") }
+                    { "ReportedBy", GetColumnIndex(headerRow, "Rapporté par") },
                 };
+
                 // Lire les données à partir de la deuxième ligne
                 foreach (var row in worksheet.RowsUsed().Skip(1))
                 {
-                    // Extract data from cells and process
+                    // Extract and clean data from cells and process
                     string reportedBy = row.Cell(columnIndexes["ReportedBy"]).GetValue<string>();
-                    
-                    //return chaque object ExcelData une fois
-                    yield return new ExcelData
+
+                    // Return each ExcelData object
+                    yield return new DangerExcelData
                     {
-                        ReportedBy = GetFirstAndLastName(reportedBy),
-                        CPVFocus = row.Cell(columnIndexes["CPVFocus"]).GetValue<string>(),
-                        VPCType = row.Cell(columnIndexes["VPCType"]).GetValue<string>()
+                        ReportedBy = string.IsNullOrWhiteSpace(reportedBy) ? null : GetFirstAndLastName(reportedBy)
                     };
                 }
-                
             }
         }
-
-        // to get the index from column name , ensuring dynamic changes of columns indexs
         private int GetColumnIndex(IXLRow headerRow, string columnName)
         {
             // verify if the column name exist in excel file column's
             var column = headerRow.Cells().FirstOrDefault(c => c.GetValue<string>() == columnName);
             return column?.Address.ColumnNumber ?? -1; // Return -1 if column not found
         }
-
-        public Dictionary<string, Dictionary<string, int>> CountVPCsByReporter(IEnumerable<ExcelData> dataList)
-        {
-            return dataList
-            .GroupBy(data => data.ReportedBy)  // Group by Reporter
-            .ToDictionary(
-            reporterGroup => reporterGroup.Key,  // Reporter name
-            reporterGroup => reporterGroup
-                .GroupBy(data => data.VPCType)  // Group by VPCType within each reporter
-                .ToDictionary(
-                    vpcGroup => vpcGroup.Key,  // VPCType
-                    vpcGroup => vpcGroup.Count()  // Count occurrences of each VPCType
-                )
-            );
-        }
-
         private string GetFirstAndLastName(string reporterInfo)
         {
             string[] parts = reporterInfo.Split(',');
-            // Extract and trim the full name part
+            // Extract the first and last name
             string firstName = parts[0].Trim();
             string lastName = parts[1];
             return firstName + lastName;
             //fa6f2e32-efaf-40ee-9043-3bbc18977b29
         }
-    }
+        public Dictionary<string, int> GetVpcRepoterCount(IEnumerable<DangerExcelData> data)
+        {
+            return data.GroupBy(data => data.ReportedBy)
+                .ToDictionary(
+                reporter => reporter.Key,
+                reporter => reporter.Count()
+                );
+        }
+    }   
+
 }

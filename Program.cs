@@ -1,7 +1,15 @@
-using ProcessServices.Services.Processor;
-using ProcessServices.Services.Processor.Impl;
+using ProcessServices.Services.Processor.Bog;
+using ProcessServices.Services.Processor.Bog.Impl;
+using ProcessServices.Services.Processor.Danger;
+using ProcessServices.Services.Processor.Danger.Impl;
+using ProcessServices.Services.Processor.Vpcs;
+using ProcessServices.Services.Processor.Vpcs.Impl;
+using ProcessServices.Services.Processor.OverDue;
+using ProcessServices.Services.Processor.OverDue.Impl;
 using ProcessServices.Services.Uploader;
 using ProcessServices.Services.Uploader.Impl;
+using ProcessServices.Services.Processor.Finding;
+using ProcessServices.Services.Processor.Finding.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,12 +20,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IFileUpload,ExcelFileUpload>();
-builder.Services.AddScoped<IDataProcess, ExcelDataProcess>();
+builder.Services.AddScoped<IDataProcess, VPCsExcelDataProcess>();
+builder.Services.AddScoped<IDangerDataProcess, DangerExcelDataProcess>();
+builder.Services.AddScoped<IBogDataProcess  , BogExcelDataProcess>();
+builder.Services.AddScoped<IOverDueDataProcess, OverDueExcelDataProcess>();
+builder.Services.AddScoped<IFindingDataProcess, FindingExcelDataProcess>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
         policy =>
         {
+            
             policy.WithOrigins(builder.Configuration.GetSection("ALLOWED_ORIGIN:ALLOWED_DEV_ORIGIN").Value)
             .AllowAnyMethod()
             .AllowAnyHeader();
@@ -29,6 +42,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    
     app.UseSwagger();
     app.UseSwaggerUI();
 }
