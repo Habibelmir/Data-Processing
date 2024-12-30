@@ -15,7 +15,7 @@ Properties/
 
 # Development configuration files (if they contain sensitive information)
 appsettings.Development.json
-appsettings.json
+
 
 # Visual Studio files
 .vs/
